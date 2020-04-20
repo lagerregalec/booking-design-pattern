@@ -15,23 +15,6 @@
     }
   </style>
 </head>
-<body>
-<script>
-  if('geolocation' in navigator){
-    console.log('geolocation available');
-    navigator.geolocation.getCurrentPosition(position => {
-      const lon = position.coords.longitude;
-      const lat = position.coords.latitude;
-      console.log(position.coords.latitude,position.coords.longitude);
-    });
-  } else {
-    console.log('geolocation not available');
-  }
-</script>
-<p>
-  latitude: <span id="latitude"></span>&deg;<br />
-  longitude: <span id="longitude"></span>&deg;
-</p>
-</body>
+
 
 </html>
