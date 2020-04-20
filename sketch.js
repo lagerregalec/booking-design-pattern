@@ -14,7 +14,27 @@ function setup() {
 }
 function draw() {
   // put drawing code here
+    object.onclick = this.bookingState()State(){myScript};
+}
 
+function startState() {
+    textSize(20)
+    textFont('Helvetica')
+    text(PRESS B FOR FLIGHT BOOKING,windowWidth/2, windowHeight/2);
+    if (keyIsPressed) {
+        this.bookingState()
+    }
+}
+
+function bookingState() {
+    image(imgMap, 0, 0, windowWidth, windowHeight);
+    textSize(20)
+    textFont('Helvetica')
+    text(selector.country,windowWidth/2, windowHeight/2);
+    selector.display()
+}
+
+function confirmState() {
     image(imgMap, 0, 0, windowWidth, windowHeight);
     textSize(20)
     textFont('Helvetica')
