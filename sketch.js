@@ -1,19 +1,45 @@
 let imgMap;
 let countryLatLong;
 let selector;
+let lon;
+let lat;
+let isFlying = false;
+
+let destination = {
+    x: null,
+    y: null,
+};
+
+let departure = {
+    x: null,
+    y: null
+};
 
 function preload() {
     imgMap = loadImage('assets/map2.jpg');
     countryLatLong = loadTable('countries.csv', 'csv', 'header');
+    if('geolocation' in navigator){
+        console.log('geolocation available');
+        navigator.geolocation.getCurrentPosition(position => {
+            lon = position.coords.longitude;
+            lat = position.coords.latitude;
+            console.log(position.coords.latitude,position.coords.longitude);
+            selector = new CountrySelector(windowWidth / 2, windowHeight / 2)
+        });
+    } else {
+        console.log('geolocation not available');
+    }
 }
 
 function setup() {
-  // put setup code here
+    // put setup code here
     createCanvas(windowWidth, windowHeight);
-    selector = new CountrySelector(windowWidth/2, windowHeight/2)
+
 }
+
 function draw() {
   // put drawing code here
+
     object.onclick = this.bookingState()State(){myScript};
 }
 
@@ -35,7 +61,33 @@ function bookingState() {
 }
 
 function confirmState() {
+    if(windowWidth > windowHeight){
+    image(imgMap, 0, 0, windowWidth, windowWidth/1.9938347719);}
+    else{
+        image(imgMap, 0, 0,windowHeight*1.9938347719, windowHeight);
+    }}
+
+function keyPressed() {
+    console.log("keyPressed");
+    if (keyCode === ENTER) {
+        console.log("enter pressed");
+        isFlying = !isFlying;
+    }
+}
+
+function draw() {
+  // put drawing code here
+
     image(imgMap, 0, 0, windowWidth, windowHeight);
+
+    if (isFlying) {
+        destination.x = mouseX;
+        destination.y = mouseY;
+        console.log("hello");
+        circle(destination.x, destination.y, 30);
+    }
+
+
     textSize(20)
     textFont('Helvetica')
     text(selector.country,windowWidth/2, windowHeight/2);
@@ -43,7 +95,12 @@ function confirmState() {
 }
 
 function windowResized() {
-    resizeCanvas(windowWidth, windowHeight)
+    if(windowWidth > windowHeight){
+        resizeCanvas(windowWidth,windowWidth/1.9938347719)}
+        else{
+        resizeCanvas(windowHeight*1.9938347719, windowHeight)
+        }
+
     selector.position(windowWidth/2, windowHeight/2)
 }
 
@@ -52,8 +109,8 @@ class CountrySelector {
 
         this.x = X
         this.y = Y
-        this.lat= 47
-        this.long = 8
+        this.lat= lat
+        this.long = lon
         this.countryCode = 'unknown'
         this.country = this.getCountryName(this.lat,this.long)
         this.dimensions = {
