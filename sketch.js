@@ -8,10 +8,14 @@ function preload() {
 }
 
 function setup() {
-  // put setup code here
+    // put setup code here
     createCanvas(windowWidth, windowHeight);
-    selector = new CountrySelector(windowWidth/2, windowHeight/2)
+    navigator.geolocation.getCurrentPosition((position) => {
+        doSomething(position.coords.latitude, position.coords.longitude);
+    });
+    selector = new CountrySelector(windowWidth / 2, windowHeight / 2)
 }
+
 function draw() {
   // put drawing code here
 
