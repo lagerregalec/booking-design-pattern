@@ -1,4 +1,4 @@
-# booking-design-pattern
+# booking-design-pattern 2
 
 An unconventional flight destination selector made with p5.js
 Built as an example exercise for the Bit and Atoms II
