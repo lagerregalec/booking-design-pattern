@@ -3,17 +3,16 @@ let countryLatLong;
 let selector;
 let lon;
 let lat;
-let isFlying = false;
+let isFlying = true;
+let price;
 
-let destination = {
-    x: null,
-    y: null,
-};
+let activeState = 'start';
 
-let departure = {
-    x: null,
-    y: null
-};
+let destination;
+
+let angle;
+let departure;
+let velocity;
 
 function preload() {
     imgMap = loadImage('assets/map2.jpg');
@@ -21,77 +20,80 @@ function preload() {
     if('geolocation' in navigator){
         console.log('geolocation available');
         navigator.geolocation.getCurrentPosition(position => {
-            lon = position.coords.longitude;
-            lat = position.coords.latitude;
-            console.log(position.coords.latitude,position.coords.longitude);
             selector = new CountrySelector(windowWidth / 2, windowHeight / 2)
+            selector.location(position.coords.longitude, position.coords.latitude);
         });
     } else {
         console.log('geolocation not available');
     }
+    angle = 0;
 }
 
 function setup() {
     // put setup code here
     createCanvas(windowWidth, windowHeight);
-
+    velocity = createVector(1,1);
+    destination = createVector(windowWidth/2, windowHeight/2);
 }
 
 function draw() {
-  // put drawing code here
-
-    object.onclick = this.bookingState()State(){myScript};
+    // put drawing code here
+    if (activeState == 'start') {
+        startState();
+    } else if (activeState == 'booking') {
+        bookingState();
+    } else if (activeState == 'confirm') {
+        confirmState();
+    }
 }
 
 function startState() {
-    textSize(20)
-    textFont('Helvetica')
-    text(PRESS B FOR FLIGHT BOOKING,windowWidth/2, windowHeight/2);
-    if (keyIsPressed) {
-        this.bookingState()
-    }
+    textSize(20);
+    textFont('Helvetica');
+    text('PRESS B FOR FLIGHT BOOKING', windowWidth/2, windowHeight/2);
 }
 
 function bookingState() {
     image(imgMap, 0, 0, windowWidth, windowHeight);
     textSize(20)
     textFont('Helvetica')
-    text(selector.country,windowWidth/2, windowHeight/2);
-    selector.display()
+
+    if (isFlying) {
+
+        price += 1;
+        destination.add(velocity);
+        fill(0);
+        circle(destination.x, destination.y, 10);
+        console.log(velocity.x + " " + velocity.y);
+    } else {
+        activeState = 'confirm';
+    }
+
+    if (selector) {
+        text(selector.country, windowWidth / 2, windowHeight / 2);
+        selector.display()
+    }
 }
 
-function confirmState() {
-    if(windowWidth > windowHeight){
-    image(imgMap, 0, 0, windowWidth, windowWidth/1.9938347719);}
-    else{
-        image(imgMap, 0, 0,windowHeight*1.9938347719, windowHeight);
-    }}
-
 function keyPressed() {
-    console.log("keyPressed");
+    if (key === 'b' || key === 'B') {
+        activeState = 'booking';
+    }
     if (keyCode === ENTER) {
         console.log("enter pressed");
         isFlying = !isFlying;
     }
-}
+    if (keyCode === 37) {
+        angle -= 0.1;
 
-function draw() {
-  // put drawing code here
-
-    image(imgMap, 0, 0, windowWidth, windowHeight);
-
-    if (isFlying) {
-        destination.x = mouseX;
-        destination.y = mouseY;
-        console.log("hello");
-        circle(destination.x, destination.y, 30);
     }
-
-
-    textSize(20)
-    textFont('Helvetica')
-    text(selector.country,windowWidth/2, windowHeight/2);
-    selector.display()
+    if (keyCode === 39) {
+        angle += 0.1;
+    }
+    velocity.x = sin(angle);
+    velocity.y = cos(angle);
+    destination.add(velocity);
+    velocity.normalize()
 }
 
 function windowResized() {
@@ -143,6 +145,11 @@ class CountrySelector {
         fill(0)
         textAlign(CENTER)
         text(this.deg_to_dms(abs(lat))+NS+", "+this.deg_to_dms(abs(long))+EW,180,15)
+    }
+
+    location(long, lat) {
+        this.long = long;
+        this.lat = lat;
     }
 
     position(x, y) {
