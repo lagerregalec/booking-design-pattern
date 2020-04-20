@@ -1,6 +1,17 @@
 let imgMap;
 let countryLatLong;
 let selector;
+let isFlying = false;
+
+let destination = {
+    x: null,
+    y: null,
+};
+
+let departure = {
+    x: null,
+    y: null
+};
 
 function preload() {
     imgMap = loadImage('assets/map2.jpg');
@@ -12,10 +23,27 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     selector = new CountrySelector(windowWidth/2, windowHeight/2)
 }
+
+function keyPressed() {
+    console.log("keyPressed");
+    if (keyCode === ENTER) {
+        console.log("enter pressed");
+        isFlying = !isFlying;
+    }
+}
+
 function draw() {
   // put drawing code here
-
     image(imgMap, 0, 0, windowWidth, windowHeight);
+
+    if (isFlying) {
+        destination.x = mouseX;
+        destination.y = mouseY;
+        console.log("hello");
+        circle(destination.x, destination.y, 30);
+    }
+
+
     textSize(20)
     textFont('Helvetica')
     text(selector.country,windowWidth/2, windowHeight/2);
