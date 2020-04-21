@@ -13,7 +13,10 @@ let destination;
 
 let angle;
 let departure;
+let destName;
 let velocity;
+
+let path=[];
 
 function preload() {
     imgMap = loadImage('assets/map2.jpg');
@@ -45,8 +48,22 @@ function draw() {
     } else if (activeState == 'booking') {
         bookingState();
     } else if (activeState == 'confirm') {
-        confirmState();
+        departure = selector.getCountryName(lon,lat);
+        destName = selector.coordinateFinder(destination.x,destination.y);
+        price = path.length*2;
+        confirmState(departure, destName, price);
     }
+
+    if (keyIsDown(LEFT_ARROW)) {
+        angle += 0.05;
+    }
+    if (keyIsDown(RIGHT_ARROW)) {
+        angle -= 0.05;
+    }
+    velocity.x = sin(angle);
+    velocity.y = cos(angle);
+    destination.add(velocity);
+    velocity.normalize()
 }
 
 function startState() {
@@ -62,6 +79,7 @@ function bookingState() {
 
     if (isFlying) {
         price += 1;
+        path.push({x:destination.x,y:destination.y})
         destination.add(velocity);
         fill(0);
 
@@ -80,7 +98,13 @@ function bookingState() {
         text(selector.country, windowWidth / 2, windowHeight / 2);
         selector.display()
     }
+
+    for(let i = 0; i<path.length; i=i+5){
+        fill(0,0,0,50)
+        circle(path[i].x,path[i].y,5);
+    }
 }
+
 
 function keyPressed() {
     if (key === 'b' || key === 'B') {
@@ -90,17 +114,6 @@ function keyPressed() {
         console.log("enter pressed");
         isFlying = !isFlying;
     }
-    if (keyCode === 37) {
-        angle += 0.1;
-
-    }
-    if (keyCode === 39) {
-        angle -= 0.1;
-    }
-    velocity.x = sin(angle);
-    velocity.y = cos(angle);
-    destination.add(velocity);
-    velocity.normalize()
 }
 
 function windowResized() {
@@ -133,10 +146,10 @@ class CountrySelector {
         }
     }
 
-    coordinateFinder() {
+    coordinateFinder(x,y) {
         // gui element to select a latitude and longitude
-        let lat = map(mouseY, this.y -  this.dimensions.h/2, this.y +  this.dimensions.h/2, 84, -80)
-        let long = map(mouseX, this.x -  this.dimensions.w/2, this.x +  this.dimensions.w/2, -180, 180)
+        let lat = map(y, this.y -  this.dimensions.h/2, this.y +  this.dimensions.h/2, 84, -80)
+        let long = map(x, this.x -  this.dimensions.w/2, this.x +  this.dimensions.w/2, -180, 180)
         let NS = 'S'
         let EW = 'W'
         if (lat>0) {
@@ -145,13 +158,8 @@ class CountrySelector {
         if (long>0) {
             EW = 'E'
         }
-        let newCountry =  this.getCountryName(lat, long)
-        if ( this.country = newCountry) {
-            this.country = newCountry
-        }
-        fill(0)
-        textAlign(CENTER)
         text(this.deg_to_dms(abs(lat))+NS+", "+this.deg_to_dms(abs(long))+EW,180,15)
+        return this.getCountryName(lat, long)
     }
 
     location(long, lat) {
