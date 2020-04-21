@@ -64,6 +64,9 @@ function startState() {
     textFont('Helvetica');
     textAlign(CENTER, CENTER);
     text('PRESS B FOR FLIGHT BOOKING', windowWidth/2, windowHeight/2);
+    textSize(15);
+    textAlign(LEFT, BOTTOM);
+    text('designed by aathmigan', 50, windowHeight - 50);
 }
 
 function bookingState() {
