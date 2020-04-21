@@ -8,6 +8,7 @@ function confirmState(departure, destination, price) {
     image(imgDeparture,windowWidth/2.4, windowHeight/2.6,50,50);
     text(destination, windowWidth/2.2, windowHeight/2.2);
     image(imgDestination,windowWidth/2.4, windowHeight/2.2,50,50);
-    text('CHF',windowWidth/2.6,windowHeight/1.8);
-    text(price, windowWidth/2, windowHeight/1.8);
+    image(imgDollar,windowWidth/2.4,windowHeight/1.8,30,30);
+    textSize(30)
+    text(price+' CHF', windowWidth/2.2, windowHeight/1.8);
 }

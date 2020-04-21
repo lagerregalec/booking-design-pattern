@@ -2,13 +2,14 @@ let imgMap;
 let imgPlane;
 let imgDeparture;
 let imgDestination;
+let imgDollar;
 let countryLatLong;
 let selector;
 let lon;
 let lat;
 let price;
 
-let activeState = 'confirm';
+let activeState = 'start';
 
 let destination;
 let angle;
@@ -23,6 +24,7 @@ function preload() {
     imgPlane = loadImage('assets/streamline_plane.png');
     imgDeparture = loadImage('assets/streamline_departure.png');
     imgDestination = loadImage('assets/streamline_destination.png');
+    imgDollar = loadImage('assets/streamline_bag.png');
     countryLatLong = loadTable('countries.csv', 'csv', 'header');
     if('geolocation' in navigator){
         console.log('geolocation available');
@@ -104,7 +106,8 @@ function bookingState() {
     }
 
     for(let i = 0; i<path.length; i=i+10){
-        fill(0,0,0,50)
+        noStroke();
+        fill(0,0,0)
         circle(path[i].x,path[i].y,5);
     }
 }
