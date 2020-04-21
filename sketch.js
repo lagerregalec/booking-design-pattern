@@ -25,7 +25,9 @@ function preload() {
     if('geolocation' in navigator){
         console.log('geolocation available');
         navigator.geolocation.getCurrentPosition(position => {
-            selector = new CountrySelector(windowWidth / 2, windowHeight / 2)
+            selector = new CountrySelector(windowWidth / 2, windowHeight / 2);
+            lat = position.coords.latitude;
+            lon = position.coords.longitude;
             selector.location(position.coords.longitude, position.coords.latitude);
         });
     } else {
@@ -46,25 +48,18 @@ function draw() {
     if (activeState == 'start') {
         isFlying = false
         startState();
+        if (selector) {
+            let pos = selector.mapCoordinatesToXY(lat, lon);
+            destination = createVector(pos.x, pos.y);
+        }
     } else if (activeState == 'booking') {
         bookingState();
     } else if (activeState == 'confirm') {
-        departure = selector.getCountryName(lon,lat);
+        departure = selector.getCountryName(lat,lon);
         destName = selector.coordinateFinder(destination.x,destination.y);
         price = path.length*2;
         confirmState(departure, destName, price);
     }
-
-    if (keyIsDown(LEFT_ARROW)) {
-        angle += 0.05;
-    }
-    if (keyIsDown(RIGHT_ARROW)) {
-        angle -= 0.05;
-    }
-    velocity.x = sin(angle);
-    velocity.y = cos(angle);
-    destination.add(velocity);
-    velocity.normalize()
 }
 
 function startState() {
@@ -74,33 +69,36 @@ function startState() {
 }
 
 function bookingState() {
+
+    if (keyIsDown(LEFT_ARROW)) {
+        angle += 0.05;
+    }
+    if (keyIsDown(RIGHT_ARROW)) {
+        angle -= 0.05;
+    }
+    velocity.x = sin(angle);
+    velocity.y = cos(angle);
+    velocity.normalize();
+
     image(imgMap, 0, 0, windowWidth, windowHeight);
     textSize(20);
     textFont('Helvetica');
 
-    if (isFlying) {
-        price += 1;
-        path.push({x:destination.x,y:destination.y})
-        destination.add(velocity);
-        fill(0);
-
-        push();
-        translate (destination.x, destination.y);
-        rotate(-angle);
-        imageMode(CENTER);
-        image(imgPlane, 0, 0, 35, 35);
-        pop();
-        console.log(velocity.x + " " + velocity.y);
-    } else {
-        activeState = 'confirm';
-    }
+    path.push({x:destination.x,y:destination.y})
+    destination.add(velocity);
+    push();
+    translate (destination.x, destination.y);
+    rotate(-angle);
+    imageMode(CENTER);
+    image(imgPlane, 0, 0, 35, 35);
+    pop();
 
     if (selector) {
         text(selector.country, windowWidth / 2, windowHeight / 2);
         selector.display()
     }
 
-    for(let i = 0; i<path.length; i=i+5){
+    for(let i = 0; i<path.length; i=i+10){
         fill(0,0,0,50)
         circle(path[i].x,path[i].y,5);
     }
@@ -114,16 +112,16 @@ function keyPressed() {
     if (keyCode === ENTER) {
         console.log("enter pressed");
         isFlying = false;
+        activeState = 'confirm'
     }
 }
 
 function windowResized() {
     if(windowWidth > windowHeight){
-        resizeCanvas(windowWidth,windowWidth/1.9938347719)}
-        else{
+        resizeCanvas(windowWidth,windowWidth/1.9938347719)
+    } else {
         resizeCanvas(windowHeight*1.9938347719, windowHeight)
-        }
-
+     }
     selector.position(windowWidth/2, windowHeight/2)
 }
 
@@ -134,8 +132,6 @@ class CountrySelector {
         this.y = Y
         this.lat= lat
         this.long = lon
-        this.countryCode = 'unknown'
-        this.country = this.getCountryName(this.lat,this.long)
         this.dimensions = {
             w:windowWidth,
             h:windowHeight
@@ -147,20 +143,33 @@ class CountrySelector {
         }
     }
 
+    mapCoordinatesToXY(lat, long) {
+        return {
+            y: map(lat, 84, -80, this.y -  this.dimensions.h/2, this.y +  this.dimensions.h/2),
+            x: map(long, -180, 180, this.x -  this.dimensions.w/2, this.x +  this.dimensions.w/2)
+        }
+    }
+
+    mapXYToCoordinates(x, y) {
+        return {
+            lat: map(y, this.y -  this.dimensions.h/2, this.y +  this.dimensions.h/2, 84, -80),
+            long: map(x, this.x -  this.dimensions.w/2, this.x +  this.dimensions.w/2, -180, 180)
+        }
+    }
+
     coordinateFinder(x,y) {
         // gui element to select a latitude and longitude
-        let lat = map(y, this.y -  this.dimensions.h/2, this.y +  this.dimensions.h/2, 84, -80)
-        let long = map(x, this.x -  this.dimensions.w/2, this.x +  this.dimensions.w/2, -180, 180)
+        let coordinates = this.mapXYToCoordinates(x,y);
         let NS = 'S'
         let EW = 'W'
-        if (lat>0) {
+        if (coordinates.lat>0) {
             NS = 'N'
         }
-        if (long>0) {
+        if (coordinates.long>0) {
             EW = 'E'
         }
-        text(this.deg_to_dms(abs(lat))+NS+", "+this.deg_to_dms(abs(long))+EW,180,15)
-        return this.getCountryName(lat, long)
+        text(this.deg_to_dms(abs(coordinates.lat))+NS+", "+this.deg_to_dms(abs(coordinates.long))+EW,180,15)
+        return this.getCountryName(coordinates.lat, coordinates.long)
     }
 
     location(long, lat) {
@@ -184,8 +193,6 @@ class CountrySelector {
             if (newDistance < distance) {
                 distance = newDistance
                 nearestCountry = countryLatLong.getString(r, 'Country')
-                this.countryCode = countryLatLong.getString(r, 'ISO 3166 Country Code')
-                this.countryCode = this.countryCode.toLowerCase()
             }
         }
         return nearestCountry
