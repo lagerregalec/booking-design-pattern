@@ -9,7 +9,6 @@ let price;
 let activeState = 'start';
 
 let destination;
-
 let angle;
 let departure;
 let destName;
