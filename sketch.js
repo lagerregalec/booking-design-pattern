@@ -1,4 +1,5 @@
 let imgMap;
+let imgPlane;
 let countryLatLong;
 let selector;
 let lon;
@@ -16,6 +17,7 @@ let velocity;
 
 function preload() {
     imgMap = loadImage('assets/map2.jpg');
+    imgPlane = loadImage('assets/streamline_plane.png');
     countryLatLong = loadTable('countries.csv', 'csv', 'header');
     if('geolocation' in navigator){
         console.log('geolocation available');
@@ -55,15 +57,20 @@ function startState() {
 
 function bookingState() {
     image(imgMap, 0, 0, windowWidth, windowHeight);
-    textSize(20)
-    textFont('Helvetica')
+    textSize(20);
+    textFont('Helvetica');
 
     if (isFlying) {
-
         price += 1;
         destination.add(velocity);
         fill(0);
-        circle(destination.x, destination.y, 10);
+
+        push();
+        translate (destination.x, destination.y);
+        rotate(-angle);
+        imageMode(CENTER);
+        image(imgPlane, 0, 0, 35, 35);
+        pop();
         console.log(velocity.x + " " + velocity.y);
     } else {
         activeState = 'confirm';
@@ -84,11 +91,11 @@ function keyPressed() {
         isFlying = !isFlying;
     }
     if (keyCode === 37) {
-        angle -= 0.1;
+        angle += 0.1;
 
     }
     if (keyCode === 39) {
-        angle += 0.1;
+        angle -= 0.1;
     }
     velocity.x = sin(angle);
     velocity.y = cos(angle);
