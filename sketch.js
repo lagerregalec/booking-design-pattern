@@ -17,7 +17,7 @@ let velocity;
 let path=[];
 
 function preload() {
-    imgMap = loadImage('assets/map2.jpg');
+    imgMap = loadImage('assets/map3.jpg');
     imgPlane = loadImage('assets/streamline_plane.png');
     countryLatLong = loadTable('countries.csv', 'csv', 'header');
     if('geolocation' in navigator){
