@@ -1,12 +1,14 @@
 let imgMap;
 let imgPlane;
+let imgDeparture;
+let imgDestination;
 let countryLatLong;
 let selector;
 let lon;
 let lat;
 let price;
 
-let activeState = 'start';
+let activeState = 'confirm';
 
 let destination;
 let angle;
@@ -19,6 +21,8 @@ let path=[];
 function preload() {
     imgMap = loadImage('assets/map2.jpg');
     imgPlane = loadImage('assets/streamline_plane.png');
+    imgDeparture = loadImage('assets/streamline_departure.png');
+    imgDestination = loadImage('assets/streamline_destination.png');
     countryLatLong = loadTable('countries.csv', 'csv', 'header');
     if('geolocation' in navigator){
         console.log('geolocation available');
