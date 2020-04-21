@@ -62,6 +62,7 @@ function draw() {
 function startState() {
     textSize(20);
     textFont('Helvetica');
+    textAlign(CENTER, CENTER);
     text('PRESS B FOR FLIGHT BOOKING', windowWidth/2, windowHeight/2);
 }
 
