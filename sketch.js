@@ -19,7 +19,7 @@ let velocity;
 let path=[];
 
 function preload() {
-    imgMap = loadImage('assets/map2.jpg');
+    imgMap = loadImage('assets/map3.jpg');
     imgPlane = loadImage('assets/streamline_plane.png');
     imgDeparture = loadImage('assets/streamline_departure.png');
     imgDestination = loadImage('assets/streamline_destination.png');
@@ -66,7 +66,11 @@ function draw() {
 function startState() {
     textSize(20);
     textFont('Helvetica');
+    textAlign(CENTER, CENTER);
     text('PRESS B FOR FLIGHT BOOKING', windowWidth/2, windowHeight/2);
+    textSize(15);
+    textAlign(LEFT, BOTTOM);
+    text('designed by aathmigan', 50, windowHeight - 50);
 }
 
 function bookingState() {
