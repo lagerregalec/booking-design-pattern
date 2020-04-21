@@ -4,7 +4,6 @@ let countryLatLong;
 let selector;
 let lon;
 let lat;
-let isFlying = false;
 let price;
 
 let activeState = 'start';
@@ -46,7 +45,6 @@ function setup() {
 function draw() {
     // put drawing code here
     if (activeState == 'start') {
-        isFlying = false
         startState();
         if (selector) {
             let pos = selector.mapCoordinatesToXY(lat, lon);
@@ -110,8 +108,6 @@ function keyPressed() {
         activeState = 'booking';
     }
     if (keyCode === ENTER) {
-        console.log("enter pressed");
-        isFlying = false;
         activeState = 'confirm'
     }
 }
