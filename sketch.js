@@ -72,7 +72,7 @@ function startState() {
     text('PRESS B FOR FLIGHT BOOKING', windowWidth/2, windowHeight/2);
     textSize(15);
     textAlign(LEFT, BOTTOM);
-    text('designed by aathmigan', 50, windowHeight - 50);
+    text('DESIGNED BY AATMIGAN', 50, windowHeight - 35);
 }
 
 function bookingState() {
@@ -110,6 +110,9 @@ function bookingState() {
         fill(0,0,0)
         circle(path[i].x,path[i].y,5);
     }
+
+    textAlign(LEFT, BOTTOM);
+    text('USE ARROW KEYS FOR CONTROL, PRESS ENTER TO LAND', 50, windowHeight - 35);
 }
 
 
