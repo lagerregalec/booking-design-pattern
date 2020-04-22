@@ -75,17 +75,22 @@ function draw() {
 
 function startState() {
     background(255);
+    if (key === 'b' || key === 'B') {
+        activeState = 'booking';
+    }
     textSize(20);
     textFont('Helvetica');
     textAlign(CENTER, CENTER);
     text('PRESS B FOR FLIGHT BOOKING', windowWidth/2, windowHeight/2);
     textSize(15);
     textAlign(LEFT, BOTTOM);
-    text('designed by aathmigan', 50, windowHeight - 50);
+    text('DESIGNED BY AATMIGAN', 50, windowHeight - 35);
 }
 
 function bookingState() {
-
+    if (keyIsDown(ENTER)) {
+        activeState = 'confirm'
+    }
     if (keyIsDown(LEFT_ARROW)) {
         angle += 0.05;
     }
@@ -119,6 +124,9 @@ function bookingState() {
         fill(0,0,0)
         circle(path[i].x,path[i].y,5);
     }
+
+    textAlign(LEFT, BOTTOM);
+    text('USE ARROW KEYS FOR CONTROL, PRESS ENTER TO LAND', 50, windowHeight - 35);
 }
 
 
@@ -136,11 +144,6 @@ function keyPressed() {
 }
 
 function windowResized() {
-    if(windowWidth > windowHeight){
-        resizeCanvas(windowWidth,windowWidth/1.9938347719)
-    } else {
-        resizeCanvas(windowHeight*1.9938347719, windowHeight)
-     }
     selector.position(windowWidth/2, windowHeight/2)
 }
 
