@@ -26,10 +26,11 @@ function preload() {
     imgDestination = loadImage('assets/streamline_destination.png');
     imgDollar = loadImage('assets/streamline_bag.png');
     countryLatLong = loadTable('countries.csv', 'csv', 'header');
+    selector = new CountrySelector(windowWidth / 2, windowHeight / 2);
     if('geolocation' in navigator){
         console.log('geolocation available');
         navigator.geolocation.getCurrentPosition(position => {
-            selector = new CountrySelector(windowWidth / 2, windowHeight / 2);
+
             lat = position.coords.latitude;
             lon = position.coords.longitude;
             selector.location(position.coords.longitude, position.coords.latitude);
@@ -47,14 +48,21 @@ function setup() {
     destination = createVector(windowWidth/2, windowHeight/2);
 }
 
+function reset() {
+    path = [];
+    if (selector) {
+        let pos = selector.mapCoordinatesToXY(lat, lon);
+        destination = createVector(pos.x, pos.y);
+    } else {
+        destination = createVector(selector.mapCoordinatesToXY(46.8181877, 8.2275124));
+    }
+}
+
 function draw() {
     // put drawing code here
     if (activeState == 'start') {
         startState();
-        if (selector) {
-            let pos = selector.mapCoordinatesToXY(lat, lon);
-            destination = createVector(pos.x, pos.y);
-        }
+        reset();
     } else if (activeState == 'booking') {
         bookingState();
     } else if (activeState == 'confirm') {
@@ -66,6 +74,7 @@ function draw() {
 }
 
 function startState() {
+    background(255);
     if (key === 'b' || key === 'B') {
         activeState = 'booking';
     }
@@ -92,6 +101,7 @@ function bookingState() {
     velocity.y = cos(angle);
     velocity.normalize();
 
+    imageMode(CORNER);
     image(imgMap, 0, 0, windowWidth, windowHeight);
     textSize(20);
     textFont('Helvetica');
@@ -107,7 +117,6 @@ function bookingState() {
 
     if (selector) {
         text(selector.country, windowWidth / 2, windowHeight / 2);
-        selector.display()
     }
 
     for(let i = 0; i<path.length; i=i+10){
@@ -122,7 +131,16 @@ function bookingState() {
 
 
 function keyPressed() {
-
+    if (key === 'r' || key === 'R') {
+        reset();
+        activeState = 'start';
+    }
+    if (key === 'b' || key === 'B') {
+        activeState = 'booking';
+    }
+    if (keyCode === ENTER) {
+        activeState = 'confirm'
+    }
 }
 
 function windowResized() {
@@ -139,11 +157,6 @@ class CountrySelector {
         this.dimensions = {
             w:windowWidth,
             h:windowHeight
-        }
-    }
-    display() {
-        if (mouseIsPressed) {
-            this.coordinateFinder()
         }
     }
 
