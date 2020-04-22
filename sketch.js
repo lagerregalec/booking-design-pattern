@@ -75,7 +75,7 @@ function startState() {
     text('PRESS B FOR FLIGHT BOOKING', windowWidth/2, windowHeight/2);
     textSize(15);
     textAlign(LEFT, BOTTOM);
-    text('DESIGNED BY AATMIGAN', 50, windowHeight - 35);
+    text('DESIGNED BY AATHMIGAN', 50, windowHeight - 35);
 }
 
 function bookingState() {
