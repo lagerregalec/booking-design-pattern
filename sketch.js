@@ -66,6 +66,9 @@ function draw() {
 }
 
 function startState() {
+    if (key === 'b' || key === 'B') {
+        activeState = 'booking';
+    }
     textSize(20);
     textFont('Helvetica');
     textAlign(CENTER, CENTER);
@@ -76,7 +79,9 @@ function startState() {
 }
 
 function bookingState() {
-
+    if (keyIsDown(ENTER)) {
+        activeState = 'confirm'
+    }
     if (keyIsDown(LEFT_ARROW)) {
         angle += 0.05;
     }
@@ -114,20 +119,10 @@ function bookingState() {
 
 
 function keyPressed() {
-    if (key === 'b' || key === 'B') {
-        activeState = 'booking';
-    }
-    if (keyCode === ENTER) {
-        activeState = 'confirm'
-    }
+
 }
 
 function windowResized() {
-    if(windowWidth > windowHeight){
-        resizeCanvas(windowWidth,windowWidth/1.9938347719)
-    } else {
-        resizeCanvas(windowHeight*1.9938347719, windowHeight)
-     }
     selector.position(windowWidth/2, windowHeight/2)
 }
 
