@@ -44,7 +44,7 @@ function preload() {
 function setup() {
     // put setup code here
     createCanvas(windowWidth, windowHeight);
-    velocity = createVector(1,1);
+    velocity = createVector(2,2);
     destination = createVector(windowWidth/2, windowHeight/2);
 }
 
@@ -109,7 +109,7 @@ function bookingState() {
     textFont('Helvetica');
 
     path.push({x:destination.x,y:destination.y})
-    destination.add(velocity*2);
+    destination.add(velocity);
     push();
     translate (destination.x, destination.y);
     rotate(-angle);
