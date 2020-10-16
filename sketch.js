@@ -109,7 +109,7 @@ function bookingState() {
     textFont('Helvetica');
 
     path.push({x:destination.x,y:destination.y})
-    destination.add(velocity);
+    destination.add(velocity*2);
     push();
     translate (destination.x, destination.y);
     rotate(-angle);
