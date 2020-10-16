@@ -44,7 +44,7 @@ function preload() {
 function setup() {
     // put setup code here
     createCanvas(windowWidth, windowHeight);
-    velocity = createVector(2,2);
+    velocity = createVector(1,1);
     destination = createVector(windowWidth/2, windowHeight/2);
 }
 
@@ -102,6 +102,8 @@ function bookingState() {
     velocity.x = sin(angle);
     velocity.y = cos(angle);
     velocity.normalize();
+    velocity.mult(2);
+
 
     imageMode(CORNER);
     image(imgMap, 0, 0, windowWidth, windowHeight);
