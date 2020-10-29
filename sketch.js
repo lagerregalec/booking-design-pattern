@@ -102,7 +102,7 @@ function bookingState() {
     velocity.x = sin(angle);
     velocity.y = cos(angle);
     velocity.normalize();
-    velocity.mult(10);
+    velocity.mult(2);
 
 
     imageMode(CORNER);
